@@ -8,9 +8,17 @@ function reload() {
 }
 
 async function fetchNews(query) {
-    const res = await fetch(`${url}${query}&apiKey=${API_KEY}`);
-    const data = await res.json();
-    bindData(data.articles);
+    try {
+        const res = await fetch(`${url}${query}&apiKey=${API_KEY}`);
+        if (!res.ok) {
+            throw new Error(`An error occurred: ${res.status}`);
+        }
+        const data = await res.json();
+        bindData(data.articles);
+    } catch (error) {
+        console.error("Fetching news failed: ", error);
+        alert("Failed to fetch news. Please try again later.");
+    }
 }
 
 function bindData(articles) {
@@ -71,21 +79,16 @@ searchButton.addEventListener("click", () => {
 let mode = document.querySelector("#mode");
 let crr = "night";
 
-
-mode.addEventListener('change', () =>{
-    if(crr=="night")
-        {
-    alert("Turn on Light Mode");
-    document.querySelector("body").style.backgroundColor = "rgb(180, 175, 175)";
-    document.querySelector("body").style.color = "black";
-    crr="light";
-    }
-    else{
-        alert("Turn on Nigth Mode");
+mode.addEventListener('change', () => {
+    if (crr == "night") {
+        alert("Turn on Light Mode");
+        document.querySelector("body").style.backgroundColor = "rgb(180, 175, 175)";
+        document.querySelector("body").style.color = "black";
+        crr = "light";
+    } else {
+        alert("Turn on Night Mode");
         document.querySelector("body").style.backgroundColor = "rgb(0,0,33)";
         document.querySelector("body").style.color = "white";
-        crr="night";
+        crr = "night";
     }
-
-
 });
